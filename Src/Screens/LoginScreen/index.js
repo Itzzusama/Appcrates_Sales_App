@@ -14,9 +14,16 @@ import {
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [showButton, setShowButton] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
   const logoScale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(1)).current;
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+    // Alert.alert('Password change')
+  };
+
 
   useEffect(() => {
     resetAnimationValues();
@@ -85,20 +92,34 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
           maxLength={9}
           value={email}
-          // value={"Appcrates"}
           onChangeText={text => setEmail(text)}
         />
         <Text style={styles.label}>Enter Your Password</Text>
-        <TextInput
-          placeholder="Enter password"
-          placeholderTextColor={'black'}
-          maxLength={3}
-          secureTextEntry
-          style={styles.input}
-          keyboardType="phone-pad"
-          value={password}
-          onChangeText={text => setPassword(text)}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Enter password"
+            placeholderTextColor={'black'}
+            maxLength={3}
+            secureTextEntry={true}
+            // secureTextEntry={!showPassword}
+            style={styles.input}
+            keyboardType="phone-pad"
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          <TouchableOpacity
+            style={styles.passwordButton}
+            onPress={togglePasswordVisibility}>
+            <Image
+              source={
+                showPassword
+                  ? require('../../icons/eye.png')
+                  : require('../../icons/eye_hide.png')
+              }
+              style={styles.passwordImage}
+            />
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.buttonText}>Sign In</Text>
@@ -164,6 +185,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     marginTop: 10,
+    elevation: 6,
     marginBottom: 10,
   },
   buttonText: {
@@ -175,6 +197,21 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     textDecorationLine: 'underline',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+  },
+  passwordButton: {
+    position: 'absolute',
+    right: 10,
+    top: 12,
+  },
+  passwordImage: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
 });
 

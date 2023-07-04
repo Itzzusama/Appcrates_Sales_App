@@ -23,6 +23,8 @@ const Leads = ({navigation}) => {
             style={styles.image}
           />
         </TouchableOpacity>
+        <Text style={styles.headerText}>Leads</Text>
+
         <TouchableOpacity onPress={handleNotificationPress}>
           <Image
             source={require('../../icons/notification.png')}
@@ -111,6 +113,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     alignSelf: 'center',
+  },
+  headerText: {
+    fontSize: 25,
+    color: 'black',
+    fontWeight: 'bold',
   },
   bodyText: {
     fontSize: 16,
