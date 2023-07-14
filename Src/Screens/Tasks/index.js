@@ -4,78 +4,159 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
+  TextInput,
+  FlatList,
 } from 'react-native';
-import React from 'react';
-import TaskComponent from '../../Components/TaskComponent';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, {useState} from 'react';
 
 const Tasks = ({navigation}) => {
-  const handleNotificationPress = () => {
-    navigation.navigate('Notification');
-    
+  const [isTodaysInterviewOnly, setIsTodaysInterviewOnly] = useState(false);
+  const [interviewData, setInterviewData] = useState([
+    {
+      id: '1',
+      clientName: 'John Doe',
+      companyName: 'Appcrates',
+      interviewDate: '22/6',
+      Time: '2:00 PM',
+    },
+    {
+      id: '2',
+      clientName: 'John Doe',
+      companyName: 'Appcrates',
+      interviewDate: '24/6',
+      Time: '11:00 AM',
+    },
+    {
+      id: '3',
+      clientName: 'John Doe',
+      companyName: 'Appcrates',
+      interviewDate: '26/6',
+      Time: '5:00 PM',
+    },
+    {
+      id: '4',
+      clientName: 'John Doe',
+      companyName: 'Appcrates',
+      interviewDate: '28/6',
+      Time: '3:00 PM',
+    },
+    {
+      id: '5',
+      clientName: 'John Doe',
+      companyName: 'Appcrates',
+      interviewDate: '28/6',
+      Time: '2:30 PM',
+    },
+  ]);
+
+  const handleOptionPress = () => {
+    setIsTodaysInterviewOnly(!isTodaysInterviewOnly);
   };
+
+  const renderRectangularBox = ({item}) => {
+    return (
+      <TouchableOpacity style={styles.touchableBox}>
+        <View style={styles.rectangularBox}>
+          <View style={styles.infoContainer}>
+            <View style={styles.infoRow}>
+              <Text style={styles.textLabel}>Client Name: </Text>
+              <Text style={styles.textValue}>{item.clientName}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.textLabel}>Company Name: </Text>
+              <Text style={styles.textValue}>{item.companyName}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.textLabel}>Interview Date: </Text>
+              <Text style={styles.textValue}>{item.interviewDate}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.textLabel}>Interview Time: </Text>
+              <Text style={styles.textValue}>{item.Time}</Text>
+            </View>
+          </View>
+          <Image
+            source={require('../../icons/arrow.png')}
+            style={styles.arrowImage}
+          />
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Image
-            source={require('../../icons/menu.png')}
+            source={require('../../icons/back.png')}
             style={styles.image}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleNotificationPress}>
+        <Text style={styles.headerText}>All Test Tasks</Text>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Image
             source={require('../../icons/notification.png')}
             style={styles.image}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
-
-      {/* main body */}
-      <ScrollView style={styles.topContainer}>
-        <View>
-          <TaskComponent
-            heading={'Task 1'}
-            Time={'10:00 AM'}
-            description={'Test Task'}
-            bodyText={'Discuss project timeline and deliverable'}
+      <View style={styles.bottomContainer}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="   Enter Lead Name"
+            placeholderTextColor={'#1DAB87'}
           />
-          <TaskComponent
-            heading={'Task 2'}
-            Time={'12:00 AM'}
-            description={'Scrum'}
-            bodyText={'Review marketing strategies for upcoming campaign'}
-          />
-          <TaskComponent
-            heading={'Task 3'}
-            Time={'01:00 PM'}
-            description={'Meeting'}
-            bodyText={'Brainstorm ideas for product improvement'}
-          />
-          <TaskComponent
-            heading={'Task 4'}
-            Time={'03:00 PM'}
-            description={'Progress Report'}
-            bodyText={'Present quarterly financial report to stakeholders'}
-          />
-          <TaskComponent
-            heading={'Task 5'}
-            Time={'03:00 PM'}
-            description={'Test Task'}
-            bodyText={'Provide training on new company policies and procedures'}
-          />
-          <TaskComponent
-            heading={'Task 6'}
-            Time={'03:00 PM'}
-            description={'Test Task'}
-            bodyText={
-              'Evaluate project progress and identify potential roadblocks'
-            }
-          />
-          <View style={{marginBottom: 40}} />
+          <TouchableOpacity onPress={() => console.log('Filter Pressed')}>
+            <Image
+              source={require('../../icons/filter.png')}
+              style={styles.filterIcon}
+            />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            onPress={handleOptionPress}
+            style={[
+              styles.optionContainer,
+              isTodaysInterviewOnly && styles.optionSelected,
+            ]}>
+            <Text
+              style={[
+                styles.optionText,
+                isTodaysInterviewOnly && styles.optionTextSelected,
+              ]}>
+              Todays Tasks only
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.additionalContainer}>
+            <TouchableOpacity>
+              <Image
+                style={styles.additionalImage}
+                source={require('../../icons/calender.png')}
+              />
+            </TouchableOpacity>
+            <Image
+              style={styles.additionalVerticalLine}
+              source={require('../../icons/verticalLine.png')}
+            />
+            <View style={styles.additionalTextContainer}>
+              <Text style={styles.additionalText}>20/7</Text>
+              <Text style={styles.additionalText}>to</Text>
+              <Text style={styles.additionalText}>20/8</Text>
+            </View>
+          </View>
+        </View>
+
+        <FlatList
+          data={interviewData}
+          keyExtractor={item => item.id}
+          renderItem={renderRectangularBox}
+          style={styles.rectangularContainer}
+        />
+      </View>
     </View>
   );
 };
@@ -94,30 +175,132 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
+    marginTop: 5,
   },
-  rectangle: {
-    height: '30%',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 1,
-    elevation: 3,
-    marginTop: 10,
+  headerText: {
+    fontSize: 25,
+    marginRight: 90,
+    color: 'black',
+    fontWeight: 'bold',
+  },
+
+  bottomContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchInput: {
+    flex: 1,
+    borderWidth: 3,
+    borderRadius: 9,
+    borderColor: '#1DAB87',
+    marginRight: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  filterIcon: {
+    width: 24,
+    height: 24,
+  },
+  optionContainer: {
+    backgroundColor: 'white',
+    borderRadius: 9,
+    borderColor: '#1DAB87',
+    borderWidth: 1,
+    marginTop: 35,
+    height: 35,
+    width: '50%',
+    borderRadius: 10,
+    paddingHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    alignSelf: 'center',
+  optionSelected: {
+    backgroundColor: '#1DAB87',
   },
-  bodyText: {
+  optionText: {
     fontSize: 16,
+    color: '#1DAB87',
+  },
+  optionTextSelected: {
+    color: 'white',
+  },
+  additionalContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    alignItems: 'center',
+    left: 60,
+    height: 70,
+    width: '30%',
+    // alignContent: 'center',
+    // alignContent:'space-between',
+    borderColor: '#1DAB87',
+    borderWidth: 1,
+    borderRadius: 10,
+    // marginBottom:20
+  },
+  additionalImage: {
+    height: 32,
+    width: 32,
+    marginRight: 8,
+    marginLeft: 4,
+  },
+  additionalVerticalLine: {
+    height: 42,
+    width: 1,
+    marginRight: 8,
+  },
+  additionalTextContainer: {
+    flexDirection: 'column',
+  },
+  additionalText: {
+    fontSize: 14,
     color: 'black',
   },
-  topContainer: {
-    paddingTop: 10,
+  rectangularContainer: {
+    marginTop: 16,
+  },
+  touchableBox: {
+    marginBottom: 10,
+  },
+  rectangularBox: {
+    backgroundColor: '#1DAB87',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 166,
+    width: 342,
+    alignSelf: 'center',
+    borderRadius: 12,
+    elevation: 3,
+  },
+  infoContainer: {
+    marginLeft: 20,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textLabel: {
+    fontSize: 16,
+    color: 'white',
+  },
+  textValue: {
+    fontSize: 16,
+    color: 'white',
+    marginLeft: 5,
+  },
+  arrowImage: {
+    marginRight: 13,
+    height: 15,
+    width: 15,
+    tintColor: 'white',
+    alignSelf: 'flex-start',
+    marginTop: 10,
   },
 });

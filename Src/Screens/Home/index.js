@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import Toast from 'react-native-toast-message';
 
 const Home = ({navigation}) => {
   const handleNotificationPress = () => {
     navigation.navigate('Notification');
-    // Alert.alert('No Notifications');
   };
+
   const handleBoxPress = (heading, text) => {
     Alert.alert(heading, text);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -26,38 +26,148 @@ const Home = ({navigation}) => {
             style={styles.image}
           />
         </TouchableOpacity>
+        <Text style={styles.headerText}>Dashboard</Text>
         <TouchableOpacity onPress={handleNotificationPress}>
           <Image
-            source={require('../../icons/notification.png')}
+            source={require('../../icons/Notification_Icon.png')}
             style={styles.image}
           />
         </TouchableOpacity>
       </View>
+
       <View style={styles.topContainer}>
         <TouchableOpacity
           style={styles.box}
           onPress={() => handleBoxPress("Today's Task", 'No task assigned')}>
-          <Text style={styles.boxHeading}>Today's Task</Text>
-          <Text style={styles.taskText}>No task assigned</Text>
+          <Image
+            source={require('../../icons/Interview.png')}
+            style={styles.icon}
+          />
+          <Text style={styles.taskText}>Total No of Interviews Today</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.box}
           onPress={() => handleBoxPress('Pending Task', 'No task assigned')}>
-          <Text style={styles.boxHeading}>Pending Task</Text>
-          <Text style={styles.taskText}>No task assigned</Text>
+          <Image
+            source={require('../../icons/interview_Today.png')}
+            style={styles.icon}
+          />
+          <Text style={styles.taskText}>Total No of Interviews Today</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.rectangle}
-        onPress={() => handleBoxPress('Progress', 'No Record Found')}>
-        <Text style={styles.heading}>Progress</Text>
-        <Text style={styles.bodyText}>No Record Found</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => navigation.navigate('LoginScreen')}>
-        <Text style={styles.buttonText}>Log out</Text>
-      </TouchableOpacity>
+
+      <View style={styles.bottomContainer}>
+        <View style={styles.belowLineContainer}>
+          <Image
+            style={styles.lineImage}
+            source={require('../../icons/Line.png')}
+          />
+          <Text style={styles.middleText}>Quick Menu</Text>
+        </View>
+
+        <View style={styles.rowContainer}>
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('All Interviews')}>
+            <Image
+              source={require('../../icons/allInterview.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>View All Interviews</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('All Test Tasks')}>
+            <Image
+              source={require('../../icons/testTask.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>View All Test Tasks</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.rowContainer}>
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('All Leads')}>
+            <Image
+              source={require('../../icons/Leads.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>View All Leads</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('Notification')}>
+            <Image
+              source={require('../../icons/Notification_Icon.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>All Notifications</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.rowContainer}>
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('My Profile')}>
+            <Image
+              source={require('../../icons/Profile_Icon.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>My Profile</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.optionBox}
+            onPress={() => navigation.navigate('Setting')}>
+            <Image
+              source={require('../../icons/Settings.png')}
+              style={styles.boxImage}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.boxText}>Account Settings</Text>
+              <Image
+                source={require('../../icons/arrow.png')}
+                style={styles.arrowImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -76,51 +186,91 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
+    tintColor: '#1DAB87',
+  },
+  icon: {
+    width: 32,
+    height: 32,
+    tintColor: 'white',
+    marginBottom: 10,
   },
   topContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 30,
+    paddingTop: 40,
   },
   box: {
-    width: 170,
-    height: 170,
-    elevation: 3,
+    width: 156,
+    height: 114,
+    elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 1,
+    borderRadius: 8,
+    backgroundColor: '#1DAB87',
   },
-  boxHeading: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  optionBox: {
+    width: 156,
+    height: 114,
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    borderRadius: 8,
+    backgroundColor: '#1DAB87',
+  },
+  headerText: {
+    fontSize: 24,
     color: 'black',
-    marginBottom: 10,
-    alignSelf: 'center',
+    fontWeight: 'bold',
   },
   taskText: {
-    fontSize: 16,
-    color: 'black',
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'center',
+    width: '80%',
   },
-  rectangle: {
-    height: '50%',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 1,
-    elevation: 3,
-    marginTop: 10,
-    justifyContent: 'center',
+  bottomContainer: {
+    flex: 1,
+  },
+  belowLineContainer: {
     alignItems: 'center',
   },
-  heading: {
-    fontSize: 18,
+  lineImage: {
+    alignSelf: 'center',
+    marginTop: 40,
+    marginBottom: 15,
+  },
+  middleText: {
+    marginHorizontal: 10,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
-    alignSelf: 'center',
   },
-  bodyText: {
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 20,
+  },
+  boxImage: {
+    width: 32,
+    tintColor: 'white',
+    height: 32,
+    marginBottom: 10,
+    marginLeft: 13,
+  },
+  arrowImage: {
+    width: 14,
+    height: 14,
+    bottom: 40,
+    marginLeft: 20,
+    tintColor: 'white',
+  },
+  boxText: {
     fontSize: 16,
-    color: 'black',
+    fontWeight: 'bold',
+    color: 'white',
+    marginLeft: 13,
+    width: 95,
   },
   loginButton: {
     width: '80%',

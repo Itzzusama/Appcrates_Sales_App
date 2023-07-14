@@ -7,10 +7,10 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import { useState } from 'react';
+import {useState} from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 //Screens
 import Splash from './Src/Screens/Splash';
 import Home from './Src/Screens/Home';
@@ -19,6 +19,8 @@ import Tasks from './Src/Screens/Tasks';
 import Notification from './Src/Screens/Notification';
 import Leads from './Src/Screens/Leads';
 import Interviews from './Src/Screens/Interviews';
+import Interview from './Src/Screens/Interview';
+import InterviewDetails from './Src/Screens/InterviewDetails';
 import Profile from './Src/Screens/Profile';
 import Setting from './Src/Screens/Setting';
 import AboutUs from './Src/Screens/AboutUs';
@@ -34,15 +36,15 @@ import {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer({ navigation, route }) {
-  const { name, jobTitle } = route.params;
+function MyDrawer({navigation, route}) {
+  const {name, jobTitle} = route.params;
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       // drawerContent={props =>{CustomDrawerContent}}
       drawerContent={props => {
         return (
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <DrawerContentScrollView {...props}>
               <View>
                 <Image
@@ -68,7 +70,7 @@ function MyDrawer({ navigation, route }) {
                   {name}
                 </Text>
                 <Text
-                  style={{ color: 'black', marginLeft: 5, alignSelf: 'center' }}>
+                  style={{color: 'black', marginLeft: 5, alignSelf: 'center'}}>
                   {jobTitle}
                 </Text>
               </View>
@@ -81,13 +83,13 @@ function MyDrawer({ navigation, route }) {
                 borderRadius: 20,
                 elevation: 5,
                 alignSelf: 'center',
-                marginBottom: 70,
+                marginBottom: 40,
                 backgroundColor: 'rgb(231,230,230)',
                 flexDirection: 'row',
               }}>
               <Image
                 source={require('../Appcrates_App/Src/icons/power-off.png')}
-                style={{ width: 20, height: 20, marginLeft: 23, marginTop: 13 }}
+                style={{width: 20, height: 20, marginLeft: 23, marginTop: 13}}
               />
               <Text
                 style={{
@@ -106,12 +108,16 @@ function MyDrawer({ navigation, route }) {
         headerShown: false,
       }}>
       <Drawer.Screen name="Home" component={Home} />
-      {/* <Drawer.Screen name="All Interviews" component={Interviews} /> */}
+      <Drawer.Screen name="All Interviews" component={Interviews} />
       <Drawer.Screen name="All Test Tasks" component={Tasks} />
       <Drawer.Screen name="All Leads" component={Leads} />
-      {/* <Drawer.Screen name="My Profile" component={Profile} initialParams={{ name, jobTitle }} /> */}
-      {/* <Drawer.Screen name="Setting" component={Setting} />
-      <Drawer.Screen name="About Us" component={AboutUs} /> */}
+      <Drawer.Screen
+        name="My Profile"
+        component={Profile}
+        initialParams={{name, jobTitle}}
+      />
+      <Drawer.Screen name="Setting" component={Setting} />
+      <Drawer.Screen name="About Us" component={AboutUs} />
     </Drawer.Navigator>
   );
 }
@@ -128,9 +134,17 @@ function App() {
         }}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="MyDrawer" component={MyDrawer} initialParams={{ name: 'Usama', jobTitle: 'React Native Developer' }}
+        <Stack.Screen
+          name="MyDrawer"
+          component={MyDrawer}
+          initialParams={{
+            name: 'Team ReactNative',
+            jobTitle: 'React Native Developer',
+          }}
         />
         <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="Interview" component={Interview} />
+        <Stack.Screen name="InterviewDetails" component={InterviewDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

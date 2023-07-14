@@ -5,19 +5,19 @@ const Setting = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Image
-            source={require('../../icons/menu.png')}
+            source={require('../../icons/back.png')}
             style={styles.image}
           />
         </TouchableOpacity>
         <Text style={styles.headerText}>Setting</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
           <Image
             source={require('../../icons/power-off.png')}
             style={styles.image}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -37,12 +37,14 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
+    marginTop: 5,
   },
   headerText: {
     fontSize: 25,
     color: 'black',
     fontWeight: 'bold',
+    marginRight:120
   },
 });
