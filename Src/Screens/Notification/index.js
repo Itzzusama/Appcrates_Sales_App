@@ -8,8 +8,17 @@ import {
   Alert,
   Image,
 } from 'react-native';
-
+import {useEffect} from 'react';
+import {NotificationListner} from '../../utils/pushNotification';
+import messaging from '@react-native-firebase/messaging';
+import images from '../../icons';
 const Notification = ({navigation}) => {
+  useEffect(() => {
+    // NotificationListner;
+    let token = messaging().getToken();
+    console.log('Notification Token', token);
+  }, []);
+
   const notifications = [
     {
       id: '1',
@@ -55,15 +64,9 @@ const Notification = ({navigation}) => {
     <TouchableOpacity onPress={() => handleNotificationPress(item)}>
       <View style={styles.notificationItem}>
         <View style={styles.notificationContainer}>
-          <Image
-            source={require('../../icons/small-icon.png')}
-            style={styles.smallIcon}
-          />
+          <Image source={images.small_icon} style={styles.smallIcon} />
           <Text style={styles.notificationTextTitle}>Test Task</Text>
-          <Image
-            source={require('../../icons/arrow.png')}
-            style={styles.dropdownIcon}
-          />
+          <Image source={images.arrow} style={styles.dropdownIcon} />
         </View>
         <View style={styles.notificationTextContainer}>
           <Text style={styles.notificationTextTitleMain}>{item.title}</Text>
@@ -77,17 +80,11 @@ const Notification = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Image
-            source={require('../../icons/back.png')}
-            style={styles.leftImage}
-          />
+          <Image source={images.back} style={styles.leftImage} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notification</Text>
         <TouchableOpacity onPress={onIdeaPress}>
-          <Image
-            source={require('../../icons/idea.png')}
-            style={styles.rightImage}
-          />
+          <Image source={images.idea} style={styles.rightImage} />
         </TouchableOpacity>
       </View>
       <FlatList

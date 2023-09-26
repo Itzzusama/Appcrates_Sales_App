@@ -8,16 +8,67 @@ import {
   Text,
   Animated,
   ImageBackground,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-
+// import {useDispatch} from 'react-redux';
+// import {apiToken} from '../../redux/action';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import images from '../../icons';
+import {useDispatch} from 'react-redux';
+import {loginuserInfo} from '../../redux/actions/userSession';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const {loginInfo} = useSelector(state => state.userSession);
+  console.log('UserInfoData', loginInfo);
+
+  const [email, setEmail] = useState(''); //nadeem@appcrates.com
+  const [password, setPassword] = useState(''); //'SHUtL_93111'
   const [showPassword, setShowPassword] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const logoScale = new Animated.Value(1);
   const opacity = new Animated.Value(1);
+
+  const loginUser = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        'https://sales.appcratesoperations.com/public/api/login',
+        {
+          email,
+          password,
+        },
+      );
+      const mytoken = response.data.token;
+
+      if (mytoken) {
+        await AsyncStorage.setItem('token', mytoken);
+        dispatch(loginuserInfo(response.data));
+        navigation.navigate('MyDrawer');
+      } else {
+        // If the server doesn't send a token, it might be due to incorrect credentials.
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert(
+        'Invalid Credentials',
+        'Please enter the correct Email/password!',
+      ); // Show alert here.
+      // Alert.alert("Error", "An error occurred while trying to log in.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleLogin = () => {
+    loginUser();
+    setEmail(null);
+    setPassword(null);
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -31,7 +82,7 @@ const LoginScreen = ({navigation}) => {
   const scaleLogo = () => {
     Animated.timing(logoScale, {
       toValue: 100,
-      duration: 1000,
+      duration: 5000,
       useNativeDriver: true,
     }).start(() => {
       navigation.navigate('MyDrawer');
@@ -44,15 +95,6 @@ const LoginScreen = ({navigation}) => {
       resetAnimationValues();
     });
   };
-
-  const handleLogin = () => {
-    if (email === 'Appcrates' && password === '123') {
-      Alert.alert('Login Pressed');
-    } else {
-      scaleLogo();
-    }
-  };
-
   const openModal = () => {
     setIsModalVisible(true);
   };
@@ -65,10 +107,10 @@ const LoginScreen = ({navigation}) => {
     <ImageBackground
       resizeMode="contain"
       style={styles.container}
-      source={require('../../icons/mark.png')}>
+      source={images.mark}>
       <Animated.View style={[styles.boxContainer, {opacity}]}>
         <Animated.Image
-          source={require('../../icons/logo.png')}
+          source={images.logo}
           style={[styles.logo, {transform: [{scale: logoScale}]}]}
         />
 
@@ -76,7 +118,6 @@ const LoginScreen = ({navigation}) => {
           placeholder="Company Email Address"
           placeholderTextColor="black"
           style={[styles.input, {marginBottom: 20}]}
-          maxLength={9}
           value={email}
           onChangeText={text => setEmail(text)}
         />
@@ -87,7 +128,8 @@ const LoginScreen = ({navigation}) => {
             placeholderTextColor="black"
             secureTextEntry={!showPassword}
             style={styles.input}
-            maxLength={3}
+            value={password}
+            onChangeText={text => setPassword(text)}
           />
           <TouchableOpacity
             style={styles.passwordButton}
@@ -107,8 +149,15 @@ const LoginScreen = ({navigation}) => {
           <Text style={styles.forgetPasswordText}>Forget Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Sign In</Text>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={handleLogin}
+          disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Sign In</Text>
+          )}
         </TouchableOpacity>
         <View style={styles.bottomView}>
           <Text style={styles.bottomText}>Appcrates Ltd</Text>
@@ -206,7 +255,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     alignItems: 'center',
-    transform: [{translateX: -150}, {translateY: -50}],
+    transform: [{translateX: -157}, {translateY: -50}],
   },
   modalText: {
     fontSize: 16,

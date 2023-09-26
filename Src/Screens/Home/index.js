@@ -1,174 +1,173 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
   Image,
   Text,
   TouchableOpacity,
+  SafeAreaView,
   Alert,
+  RefreshControl,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import axios from 'axios';
+import images from '../../icons';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
-const Home = ({navigation}) => {
+const Home = ({navigation, route}) => {
+  useEffect(() => {
+    loginInformation();
+  }, []);
+
+  const {loginInfo} = useSelector(state => state.userSession);
+  const isSuperAdmin = loginInfo?.lead_status === 1;
+  const [loginUpdate, setLoginUpdate] = useState(loginInfo);
+  const loginInformation = () => {
+    setLoginUpdate(loginInfo);
+  };
+  // console.log('admin', loginInfo?.lead_status);
+  // console.log('login info ---->>>>', loginInfo);
+
+  // const [todayData, setTodayData] = useState(todayInterview);
+  // const {todaysInterview} = route.params.todayInterview;
+  // const inteviewData = route.params.todayInterview
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    loginInformation(``);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+  const [isLeadsButtonDisabled, setIsLeadsButtonDisabled] = useState(
+    !isSuperAdmin,
+  );
+  const [refreshing, setRefreshing] = React.useState(false);
+
   const handleNotificationPress = () => {
     navigation.navigate('Notification');
   };
 
-  const handleBoxPress = (heading, text) => {
-    Alert.alert(heading, text);
-  };
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <Image
-            source={require('../../icons/menu.png')}
-            style={styles.image}
-          />
+          <Image source={images.menu} style={styles.image} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Dashboard</Text>
         <TouchableOpacity onPress={handleNotificationPress}>
-          <Image
-            source={require('../../icons/Notification_Icon.png')}
-            style={styles.image}
-          />
+          <Image source={images.Notification_Icon} style={styles.image} />
         </TouchableOpacity>
       </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        <View style={styles.topContainer}>
+          <View style={styles.box}>
+            <Image source={images.interview} style={styles.icon} />
+            <Text style={styles.taskText}>Total No of Interviews Today</Text>
+            <Text style={styles.taskText}>
+              {loginUpdate?.total_interviews_today}
+            </Text>
+            {/* <Text style={styles.taskText}>{item?.total_interviews_today}</Text> */}
+          </View>
 
-      <View style={styles.topContainer}>
-        <TouchableOpacity
-          style={styles.box}
-          onPress={() => handleBoxPress("Today's Task", 'No task assigned')}>
-          <Image
-            source={require('../../icons/Interview.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.taskText}>Total No of Interviews Today</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.box}
-          onPress={() => handleBoxPress('Pending Task', 'No task assigned')}>
-          <Image
-            source={require('../../icons/interview_Today.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.taskText}>Total No of Interviews Today</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.bottomContainer}>
-        <View style={styles.belowLineContainer}>
-          <Image
-            style={styles.lineImage}
-            source={require('../../icons/Line.png')}
-          />
-          <Text style={styles.middleText}>Quick Menu</Text>
+          <View style={styles.box}>
+            <Image source={images.interview_Today} style={styles.icon} />
+            <Text style={styles.taskText}>Total No of TestTasks Today</Text>
+            <Text style={styles.taskText}>
+              {loginUpdate?.total_test_tasks_today}
+            </Text>
+            {/* <Text style={styles.taskText}>{item.total_interviews_today}</Text> */}
+          </View>
         </View>
 
-        <View style={styles.rowContainer}>
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('All Interviews')}>
-            <Image
-              source={require('../../icons/allInterview.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>View All Interviews</Text>
-              <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
-              />
-            </View>
-          </TouchableOpacity>
+        <View style={styles.bottomContainer}>
+          <View style={styles.belowLineContainer}>
+            <Image style={styles.lineImage} source={images.Line} />
+            <Text style={styles.middleText}>Quick Menu</Text>
+          </View>
 
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('All Test Tasks')}>
-            <Image
-              source={require('../../icons/testTask.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>View All Test Tasks</Text>
+          <View style={styles.rowContainer}>
+            <TouchableOpacity
+              style={styles.optionBox}
+              onPress={() => navigation.navigate('All Interviews')}>
+              <Image source={images.allInterview} style={styles.boxImage} />
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>View All Interviews</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.optionBox}
+              onPress={() => navigation.navigate('All Test Tasks')}>
+              <Image source={images.testTask} style={styles.boxImage} />
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>View All Test Tasks</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.rowContainer}>
+            <TouchableOpacity
+              style={[
+                styles.optionBox,
+                isLeadsButtonDisabled && styles.disabledButton,
+              ]}
+              onPress={() => {
+                if (!isLeadsButtonDisabled) {
+                  navigation.navigate('All Leads');
+                }
+              }}
+              disabled={isLeadsButtonDisabled}>
+              <Image source={images.Leads} style={styles.boxImage} />
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>View All Leads</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.optionBox}
+              onPress={() => navigation.navigate('Notification')}>
               <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
+                source={images.Notification_Icon}
+                style={styles.boxImage}
               />
-            </View>
-          </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>All Notifications</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.rowContainer}>
+            <TouchableOpacity
+              style={styles.optionBox}
+              onPress={() => navigation.navigate('My Profile')}>
+              <Image source={images.Profile_icon} style={styles.boxImage} />
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>My Profile</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.optionBox}
+              onPress={() => navigation.navigate('Setting')}>
+              <Image source={images.Setting} style={styles.boxImage} />
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.boxText}>Account Settings</Text>
+                <Image source={images.arrow} style={styles.arrowImage} />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.rowContainer}>
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('All Leads')}>
-            <Image
-              source={require('../../icons/Leads.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>View All Leads</Text>
-              <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../icons/Notification_Icon.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>All Notifications</Text>
-              <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.rowContainer}>
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('My Profile')}>
-            <Image
-              source={require('../../icons/Profile_Icon.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>My Profile</Text>
-              <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.optionBox}
-            onPress={() => navigation.navigate('Setting')}>
-            <Image
-              source={require('../../icons/Settings.png')}
-              style={styles.boxImage}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.boxText}>Account Settings</Text>
-              <Image
-                source={require('../../icons/arrow.png')}
-                style={styles.arrowImage}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -231,6 +230,9 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     flex: 1,
+  },
+  disabledButton: {
+    backgroundColor: '#D3D3D3', // Use a different color for disabled state
   },
   belowLineContainer: {
     alignItems: 'center',

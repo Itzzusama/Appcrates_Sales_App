@@ -5,6 +5,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import images from '../icons';
 
 const CustomDrawerContent = ({navigation, props}) => {
   const handleProfilePress = () => {};
@@ -14,7 +15,7 @@ const CustomDrawerContent = ({navigation, props}) => {
       <DrawerContentScrollView {...props}>
         <View>
           <Image
-            source={require('../icons/profile.png')}
+            source={images.profile}
             style={{
               width: 70,
               height: 70,
@@ -61,7 +62,7 @@ const CustomDrawerContent = ({navigation, props}) => {
             paddingTop: 8,
           }}>
           <Image
-            source={require('../icons/power-off.png')}
+            source={images.power_off}
             style={{width: 15, height: 15, marginRight: 5}}
           />
           {'LogOut'}

@@ -1,20 +1,30 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect} from 'react';
 import {View, Image, StyleSheet, Text} from 'react-native';
+import images from '../../icons';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('LoginScreen');
+      checkToken();
     }, 1000);
   });
 
+  const checkToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      console.log('get token');
+      navigation.replace('MyDrawer');
+    } else {
+      console.log('not token');
+
+      navigation.replace('LoginScreen');
+    }
+  };
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../icons/mark.png')}
-        style={styles.backgroundImage}
-      />
-      <Image source={require('../../icons/logo.png')} style={styles.logo} />
+      <Image source={images.mark} style={styles.backgroundImage} />
+      <Image source={images.logo} style={styles.logo} />
       <View style={styles.bottomView}>
         <Text style={styles.bottomText}>Appcrates Ltd</Text>
         <Text style={styles.bottomText}>All rights reserved.</Text>

@@ -1,15 +1,13 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import images from '../../icons';
 
 const Setting = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Image
-            source={require('../../icons/back.png')}
-            style={styles.image}
-          />
+          <Image source={images.back} style={styles.image} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Setting</Text>
         {/* <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
@@ -45,6 +43,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
     fontWeight: 'bold',
-    marginRight:120
+    marginRight: 120,
   },
 });

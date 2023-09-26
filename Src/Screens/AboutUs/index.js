@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import images from '../../icons';
 
 const Profile = ({navigation, route}) => {
   // const { name, jobTitle } = route.params;
@@ -25,10 +26,7 @@ const Profile = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Image
-            source={require('../../icons/back.png')}
-            style={styles.image}
-          />
+          <Image source={images.back} style={styles.image} />
         </TouchableOpacity>
         <Text style={styles.headerText}>About Us</Text>
         {/* <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
@@ -41,10 +39,7 @@ const Profile = ({navigation, route}) => {
       <ScrollView>
         <View style={styles.topContainer}>
           <View style={styles.iconContainer}>
-            <Image
-              source={require('../../icons/logo.png')}
-              style={styles.icon}
-            />
+            <Image source={images.logo} style={styles.icon} />
           </View>
           <Text style={styles.name}>{'Appcrates'}</Text>
           <Text style={styles.subtitle}>
